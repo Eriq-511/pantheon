@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from 'next/types';
 import Hero from '@/components/public/Hero';
 import Features from '@/components/public/Features';

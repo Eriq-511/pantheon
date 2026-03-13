@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import type { ApiResponse, Product } from '@/types';
