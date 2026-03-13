@@ -8,9 +8,9 @@ export default function Footer() {
     {
       title: 'Product',
       links: [
-        { label: 'Features', href: '/#features' },
-        { label: 'About', href: '/#about' },
-        { label: 'Products', href: '/#products' },
+        { label: 'Features', href: '#features' },
+        { label: 'About', href: '#about' },
+        { label: 'Products', href: '#products' },
       ],
     },
     {
@@ -80,12 +80,21 @@ export default function Footer() {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-teal hover:text-white transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.href.startsWith('#') ? (
+                      <a
+                        href={link.href}
+                        className="text-sm text-teal hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-teal hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
