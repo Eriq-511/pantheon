@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Page } from '@/types';
 
-export default async function PublicPage({ params }: { params: { slug: string } }) {
+export default async function PublicPage({ params }: any) {
   const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
   const res = await fetch(`${apiBase}/api/pages/${params.slug}`, { cache: 'no-store' });
 
