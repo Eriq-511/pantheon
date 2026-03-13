@@ -2,7 +2,11 @@ import { notFound } from 'next/navigation';
 import type { Page } from '@/types';
 import { pagesService } from '@/services/pagesService';
 
-export default async function PublicPage({ params }: { params: { slug: string } }) {
+type Props = {
+  params: { slug: string }
+};
+
+export default async function PublicPage({ params }: Props) {
   let page: Page | null = null;
   try {
     page = await pagesService.getBySlug(params.slug);
