@@ -31,7 +31,9 @@ export const fetchPageBySlug = createAsyncThunk(
   'pages/fetchBySlug',
   async (slug: string, { rejectWithValue }) => {
     try {
-      return await pagesService.getBySlug(slug);
+      // Ensure slug is trimmed and lowercased for backend compatibility
+      const safeSlug = slug.trim().toLowerCase();
+      return await pagesService.getBySlug(safeSlug);
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.error || 'Page not found');
     }

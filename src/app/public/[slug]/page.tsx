@@ -4,7 +4,9 @@ import type { Page } from '@/types';
 
 export default async function PublicPage({ params }: any) {
   const apiBase = process.env.NEXT_PUBLIC_API_URL;
-  const url = `${apiBase}/api/pages/${params.slug}`;
+  // Ensure slug is trimmed and lowercased for backend compatibility
+  const safeSlug = params.slug?.trim().toLowerCase();
+  const url = `${apiBase}/api/pages/${safeSlug}`;
   const res = await fetch(url, { cache: 'no-store' });
 
   if (!res.ok) {

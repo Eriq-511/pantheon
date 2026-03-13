@@ -8,7 +8,9 @@ export const pagesService = {
   },
 
   async getBySlug(slug: string): Promise<Page> {
-    const response = await api.get<ApiResponse<Page>>(`/api/pages/${slug}`);
+    // Ensure slug is trimmed and lowercased for backend compatibility
+    const safeSlug = slug.trim().toLowerCase();
+    const response = await api.get<ApiResponse<Page>>(`/api/pages/${safeSlug}`);
     if (!response.data.data) throw new Error('Page not found');
     return response.data.data;
   },
