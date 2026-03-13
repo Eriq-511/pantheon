@@ -1,8 +1,9 @@
+export const dynamic = "force-dynamic";
 import { notFound } from 'next/navigation';
 import type { Page } from '@/types';
 
 export default async function PublicPage({ params }: any) {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+  const apiBase = process.env.NEXT_PUBLIC_API_URL;
   const url = `${apiBase}/api/pages/${params.slug}`;
   const res = await fetch(url, { cache: 'no-store' });
 

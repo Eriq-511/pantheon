@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // Temporary debug page to list all available slugs from the backend
 import Link from 'next/link';
 
