@@ -1,18 +1,18 @@
 import { notFound } from 'next/navigation';
 import type { Page } from '@/types';
-import { pagesService } from '@/services/pagesService';
 
 type Props = {
   params: { slug: string }
 };
 
 export default async function PublicPage({ params }: Props) {
-  let page: Page | null = null;
-  try {
-    page = await pagesService.getBySlug(params.slug);
-  } catch {
-    notFound();
-  }
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+  const res = await fetch(`${apiBase}/api/pages/${params.slug}`, { cache: 'no-store' });
+
+  if (!res.ok) notFound();
+
+  const data = await res.json();
+  const page: Page | null = data?.data ?? null;
 
   if (!page) return notFound();
 
