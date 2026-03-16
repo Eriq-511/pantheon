@@ -24,7 +24,11 @@ function LoginPageContent() {
   const [fieldErrors, setFieldErrors] = useState<{ username?: string; password?: string }>({});
 
   useEffect(() => {
-    if (user) router.replace(from);
+    console.log('LoginPage useEffect: user state is', user);
+    if (user) {
+      console.log('LoginPage useEffect: Redirecting to', from);
+      router.replace(from);
+    }
   }, [user, router, from]);
 
   useEffect(() => {
@@ -54,8 +58,8 @@ function LoginPageContent() {
       const meResult = await dispatch(fetchMeThunk());
       console.log('fetchMeThunk result:', meResult);
       if (meResult.type === 'auth/fetchMe/fulfilled') {
-        // Redirect using router.replace (natural SPA behavior)
-        router.replace(from);
+        console.log('Login handler: fetchMeThunk fulfilled, user should be set.');
+        // router.replace(from); // Let useEffect handle redirect for debug clarity
       }
     }
   };
