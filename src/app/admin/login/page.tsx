@@ -41,8 +41,14 @@ function LoginPageContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-    await dispatch(loginThunk({ username: username.trim(), password }));
+    console.log('Login form submitted');
+    if (!validate()) {
+      console.log('Validation failed', fieldErrors);
+      return;
+    }
+    console.log('Dispatching loginThunk', { username: username.trim(), password });
+    const result = await dispatch(loginThunk({ username: username.trim(), password }));
+    console.log('loginThunk result:', result);
   };
 
   return (
