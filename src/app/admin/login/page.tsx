@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Zap, CheckCircle2 } from 'lucide-react';
-import { loginThunk, clearError } from '@/store/slices/authSlice';
+import { loginThunk, clearError, fetchMeThunk } from '@/store/slices/authSlice';
 import type { AppDispatch, RootState } from '@/store/store';
 import { clsx } from 'clsx';
 
