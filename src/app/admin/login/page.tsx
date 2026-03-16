@@ -54,7 +54,8 @@ function LoginPageContent() {
       const meResult = await dispatch(fetchMeThunk());
       console.log('fetchMeThunk result:', meResult);
       if (meResult.type === 'auth/fetchMe/fulfilled') {
-        router.replace(from);
+        // Force a full reload to ensure all state/layout is updated and onboarding modal does not block
+        window.location.href = from;
       }
     }
   };
