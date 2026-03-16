@@ -24,7 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         router.push('/admin/login');
       });
     }
-  }, [isAuthPage]); // eslint-disable-line
+  }, [isAuthPage, user, router, dispatch]);
 
   // Login / Signup — render with no shell at all
   if (isAuthPage) {
