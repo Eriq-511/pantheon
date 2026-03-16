@@ -49,6 +49,14 @@ function LoginPageContent() {
     console.log('Dispatching loginThunk', { username: username.trim(), password });
     const result = await dispatch(loginThunk({ username: username.trim(), password }));
     console.log('loginThunk result:', result);
+    if (result.type === 'auth/login/fulfilled') {
+      // Fetch authenticated user from backend using cookie
+      const meResult = await dispatch(fetchMeThunk());
+      console.log('fetchMeThunk result:', meResult);
+      if (meResult.type === 'auth/fetchMe/fulfilled') {
+        router.replace(from);
+      }
+    }
   };
 
   return (
