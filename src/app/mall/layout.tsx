@@ -6,7 +6,7 @@ async function getMenuItems(): Promise<MenuItem[]> {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/menu`,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 60 }, signal: AbortSignal.timeout(5000) }
     );
     if (!res.ok) return [];
     const json = await res.json();

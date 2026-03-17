@@ -16,6 +16,7 @@ async function getMenuItems(): Promise<MenuItem[]> {
     const baseUrl = process.env.NEXT_INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL;
     const res = await fetch(`${baseUrl}/api/menu`, {
       next: { revalidate: 60 },
+      signal: AbortSignal.timeout(5000),
     });
     if (!res.ok) return [];
     const json = await res.json();
