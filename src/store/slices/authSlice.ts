@@ -79,6 +79,9 @@ const authSlice = createSlice({
     clearUser: (state) => {
       state.user = null;
     },
+    rehydrateUser: (state, action: PayloadAction<LoginResponse>) => {
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     // Register — success does NOT set user; the signup page redirects to login
@@ -102,6 +105,9 @@ const authSlice = createSlice({
     builder.addCase(loginThunk.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
       state.loading = false;
       state.user = action.payload;
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('pantheon_user', JSON.stringify(action.payload));
+      }
     });
     builder.addCase(loginThunk.rejected, (state, action) => {
       state.loading = false;
@@ -111,6 +117,9 @@ const authSlice = createSlice({
     // Logout
     builder.addCase(logoutThunk.fulfilled, (state) => {
       state.user = null;
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('pantheon_user');
+      }
     });
 
     // Fetch Me
@@ -128,5 +137,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, clearUser } = authSlice.actions;
+export const { clearError, clearUser, rehydrateUser } = authSlice.actions;
 export default authSlice.reducer;
