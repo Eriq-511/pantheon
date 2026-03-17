@@ -13,10 +13,9 @@ api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('pantheon_jwt');
     if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
+      if (config.headers) {
+        (config.headers as any)['Authorization'] = `Bearer ${token}`;
+      }
     }
   }
   return config;
