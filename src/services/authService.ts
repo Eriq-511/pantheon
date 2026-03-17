@@ -8,6 +8,11 @@ export const authService = {
       credentials
     );
     if (!response.data.data) throw new Error('Login failed: no user data returned');
+    // Store JWT token in localStorage if present
+    const token = response.data.data?.token || response.data.data?.jwt;
+    if (token && typeof window !== 'undefined') {
+      localStorage.setItem('pantheon_jwt', token);
+    }
     return response.data.data;
   },
 
@@ -22,6 +27,9 @@ export const authService = {
 
   async logout(): Promise<void> {
     await api.post('/api/auth/logout');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('pantheon_jwt');
+    }
   },
 
   async getMe(): Promise<LoginResponse> {
