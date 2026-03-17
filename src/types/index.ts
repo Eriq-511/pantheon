@@ -20,6 +20,8 @@ export interface LoginResponse {
   id: number;
   username: string;
   role: 'ADMIN';
+  token?: string;
+  jwt?: string;
 }
 
 // ===== Pages =====
