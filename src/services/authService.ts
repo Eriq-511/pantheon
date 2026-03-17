@@ -8,10 +8,11 @@ export const authService = {
       credentials
     );
     if (!response.data.data) throw new Error('Login failed: no user data returned');
-    // Store JWT token in localStorage if present
-    const token = response.data.data?.token || response.data.data?.jwt;
-    if (token && typeof window !== 'undefined') {
-      localStorage.setItem('pantheon_jwt', token);
+    // Set a readable (non-HttpOnly) cookie so Next.js middleware can gate /admin routes.
+    // Real auth is still enforced by the backend on every API call.
+    if (typeof window !== 'undefined') {
+      const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = `pantheon_auth=1; path=/; expires=${expires}; SameSite=Lax`;
     }
     return response.data.data;
   },
@@ -29,6 +30,8 @@ export const authService = {
     await api.post('/api/auth/logout');
     if (typeof window !== 'undefined') {
       localStorage.removeItem('pantheon_jwt');
+      // Clear the middleware routing cookie
+      document.cookie = 'pantheon_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
     }
   },
 

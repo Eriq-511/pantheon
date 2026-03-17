@@ -1,19 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-/**
- * Decode a JWT payload (base64url) and check the `exp` claim.
- * Does NOT verify the signature — that is the backend's responsibility.
- * This prevents stale/expired cookies from slipping past the middleware redirect.
- */
-function isJwtExpired(token: string): boolean {
-  try {
-    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    const payload = JSON.parse(atob(base64));
-    return typeof payload.exp === 'number' && payload.exp * 1000 < Date.now();
-  } catch {
-    return true;
-  }
-}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -23,11 +9,15 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protect all /admin/* routes
+  // Protect all /admin/* routes.
+  // We check `pantheon_auth` — a non-HttpOnly cookie the frontend sets after a
+  // successful login. The backend's HttpOnly `jwt` cookie cannot be read here
+  // because it is blocked cross-origin (backend on onrender.com, frontend on vercel.app).
+  // Real authentication is still enforced by the backend on every API request.
   if (pathname.startsWith('/admin')) {
-    const jwtCookie = request.cookies.get('jwt');
+    const authCookie = request.cookies.get('pantheon_auth');
 
-    if (!jwtCookie?.value || isJwtExpired(jwtCookie.value)) {
+    if (!authCookie?.value) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);

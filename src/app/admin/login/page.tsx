@@ -1,11 +1,11 @@
-﻿'use client';
+'use client';
 
 import { Suspense, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Zap, CheckCircle2 } from 'lucide-react';
-import { loginThunk, clearError, fetchMeThunk } from '@/store/slices/authSlice';
+import { loginThunk, clearError } from '@/store/slices/authSlice';
 import type { AppDispatch, RootState } from '@/store/store';
 import { clsx } from 'clsx';
 
@@ -24,9 +24,7 @@ function LoginPageContent() {
   const [fieldErrors, setFieldErrors] = useState<{ username?: string; password?: string }>({});
 
   useEffect(() => {
-    console.log('LoginPage useEffect: user state is', user);
     if (user) {
-      console.log('LoginPage useEffect: Redirecting to', from);
       router.replace(from);
     }
   }, [user, router, from]);
@@ -45,23 +43,8 @@ function LoginPageContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login form submitted');
-    if (!validate()) {
-      console.log('Validation failed', fieldErrors);
-      return;
-    }
-    console.log('Dispatching loginThunk', { username: username.trim(), password });
-    const result = await dispatch(loginThunk({ username: username.trim(), password }));
-    console.log('loginThunk result:', result);
-    if (result.type === 'auth/login/fulfilled') {
-      // Fetch authenticated user from backend using cookie
-      const meResult = await dispatch(fetchMeThunk());
-      console.log('fetchMeThunk result:', meResult);
-      if (meResult.type === 'auth/fetchMe/fulfilled') {
-        console.log('Login handler: fetchMeThunk fulfilled, user should be set.');
-        // router.replace(from); // Let useEffect handle redirect for debug clarity
-      }
-    }
+    if (!validate()) return;
+    dispatch(loginThunk({ username: username.trim(), password }));
   };
 
   return (

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import Sidebar from '@/components/admin/Sidebar';
 import Navbar from '@/components/admin/Navbar';
-import { fetchMeThunk } from '@/store/slices/authSlice';
+import { fetchMeThunk, rehydrateUser } from '@/store/slices/authSlice';
 import type { AppDispatch, RootState } from '@/store/store';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +20,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (isAuthPage) return;
     if (!user) {
+      // Try to rehydrate from sessionStorage first (avoids stale cross-origin cookie).
+      // If nothing is stored, fall back to the /api/auth/me endpoint.
+      const stored = typeof window !== 'undefined'
+        ? sessionStorage.getItem('pantheon_user')
+        : null;
+      if (stored) {
+        try {
+          dispatch(rehydrateUser(JSON.parse(stored)));
+          return;
+        } catch {
+          sessionStorage.removeItem('pantheon_user');
+        }
+      }
       dispatch(fetchMeThunk()).unwrap().catch(() => {
         router.push('/admin/login');
       });
