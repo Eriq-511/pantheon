@@ -7,7 +7,7 @@ import type { Product } from '@/types';
 const FEATURED_KEY = 'pantheon_featured_products';
 
 function toUGX(price: number) {
-  return `UGX ${(price * 3700).toLocaleString('en-UG', { maximumFractionDigits: 0 })}`;
+  return `UGX ${price.toLocaleString('en-UG', { maximumFractionDigits: 0 })}`;
 }
 
 function MallProductCard({

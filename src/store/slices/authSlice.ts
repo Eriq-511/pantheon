@@ -2,15 +2,17 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authService } from '@/services/authService';
 import type { LoginRequest, LoginResponse, RegisterRequest } from '@/types';
 
+
+type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 interface AuthState {
   user: LoginResponse | null;
-  loading: boolean;
+  status: AuthStatus;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  loading: false,
+  status: 'loading',
   error: null,
 };
 
@@ -78,45 +80,48 @@ const authSlice = createSlice({
     },
     clearUser: (state) => {
       state.user = null;
+      state.status = 'unauthenticated';
     },
     rehydrateUser: (state, action: PayloadAction<LoginResponse>) => {
       state.user = action.payload;
+      state.status = 'authenticated';
     },
   },
   extraReducers: (builder) => {
     // Register — success does NOT set user; the signup page redirects to login
     builder.addCase(registerThunk.pending, (state) => {
-      state.loading = true;
+      state.status = 'loading';
       state.error = null;
     });
     builder.addCase(registerThunk.fulfilled, (state) => {
-      state.loading = false;
+      state.status = 'unauthenticated';
     });
     builder.addCase(registerThunk.rejected, (state, action) => {
-      state.loading = false;
+      state.status = 'unauthenticated';
       state.error = action.payload as string;
     });
 
     // Login
     builder.addCase(loginThunk.pending, (state) => {
-      state.loading = true;
+      state.status = 'loading';
       state.error = null;
     });
     builder.addCase(loginThunk.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-      state.loading = false;
+      state.status = 'authenticated';
       state.user = action.payload;
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('pantheon_user', JSON.stringify(action.payload));
       }
     });
     builder.addCase(loginThunk.rejected, (state, action) => {
-      state.loading = false;
+      state.status = 'unauthenticated';
       state.error = action.payload as string;
     });
 
     // Logout
     builder.addCase(logoutThunk.fulfilled, (state) => {
       state.user = null;
+      state.status = 'unauthenticated';
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem('pantheon_user');
       }
@@ -124,14 +129,14 @@ const authSlice = createSlice({
 
     // Fetch Me
     builder.addCase(fetchMeThunk.pending, (state) => {
-      state.loading = true;
+      state.status = 'loading';
     });
     builder.addCase(fetchMeThunk.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-      state.loading = false;
+      state.status = 'authenticated';
       state.user = action.payload;
     });
     builder.addCase(fetchMeThunk.rejected, (state) => {
-      state.loading = false;
+      state.status = 'unauthenticated';
       state.user = null;
     });
   },

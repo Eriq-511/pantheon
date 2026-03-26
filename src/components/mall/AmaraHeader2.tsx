@@ -1,50 +1,42 @@
-'use client';
-
+"use client";
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Sparkles, ShoppingBag } from 'lucide-react';
+import { Menu as MenuIcon, X as XIcon, Sparkles as SparklesIcon, ShoppingBag as ShoppingBagIcon } from 'lucide-react';
 import type { MenuItem } from '@/types';
 
 interface AmaraHeaderProps {
   menuItems: MenuItem[];
 }
 
-const DEFAULT_NAV = [
-  { label: 'Home',        href: '/mall' },
-  { label: 'Collections', href: '/mall#collections' },
-  { label: 'About',       href: '/mall#about' },
-];
-
-export default function AmaraHeader({ menuItems }: AmaraHeaderProps) {
+const AmaraHeader: React.FC<AmaraHeaderProps> = ({ menuItems }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const navLinks =
-    menuItems.length > 0
-      ? menuItems.map((item) => ({
-          label: item.label,
-          href: item.pageSlug ? `/${item.pageSlug}` : item.url || '#',
-        }))
-      : DEFAULT_NAV;
+  const navLinks = menuItems.length > 0 ? menuItems.map((item) => ({
+    label: item.label,
+    href: item.pageSlug ? `/${item.pageSlug}` : item.url || '#',
+  })) : [];
 
   return (
     <header className="sticky top-0 z-50 bg-[#FDF6F0] border-b border-[#EDCFB8]/60 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/mall" className="flex items-center gap-2.5 group">
+          <span className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#E8A598] to-[#D4826A] flex items-center justify-center shadow-md group-hover:from-[#D4826A] group-hover:to-[#BE6A52] transition-all">
-              <Sparkles size={15} className="text-white" />
+              <SparklesIcon size={15} className="text-white" />
             </div>
             <div className="leading-tight">
-              <span className="text-base font-bold text-[#3D2B1F] tracking-tight">Amara&apos;s Glow</span>
+              <span className="text-base font-bold text-[#3D2B1F] tracking-tight">No Site Connected</span>
               <span className="text-[10px] font-medium text-[#C0856A] tracking-widest uppercase block -mt-0.5">
-                Skincare Boutique
+                Connect a website or social account
               </span>
             </div>
-          </Link>
+          </span>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
+            {navLinks.length === 0 && (
+              <span className="text-xs text-[#C0856A]">No navigation available</span>
+            )}
             {navLinks.map((link) => (
               <Link
                 key={link.label}
@@ -62,7 +54,7 @@ export default function AmaraHeader({ menuItems }: AmaraHeaderProps) {
               aria-label="Cart"
               className="relative p-2 rounded-full text-[#6B4A3A] hover:bg-[#F7E8DF] transition-colors"
             >
-              <ShoppingBag size={20} />
+              <ShoppingBagIcon size={20} />
             </button>
 
             {/* Mobile menu toggle */}
@@ -71,7 +63,7 @@ export default function AmaraHeader({ menuItems }: AmaraHeaderProps) {
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileOpen ? <XIcon size={20} /> : <MenuIcon size={20} />}
             </button>
           </div>
         </div>
@@ -96,4 +88,6 @@ export default function AmaraHeader({ menuItems }: AmaraHeaderProps) {
       )}
     </header>
   );
-}
+};
+
+export default AmaraHeader;

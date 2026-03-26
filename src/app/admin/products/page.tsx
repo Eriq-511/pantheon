@@ -238,7 +238,7 @@ export default function ProductsAdminPage() {
               step="0.01"
               value={newProduct.price}
               onChange={(e) => setNewProduct((prev) => ({ ...prev, price: e.target.value }))}
-              placeholder="Price (USD)"
+              placeholder="Price (UGX)"
               className="px-3 py-2 rounded-xl border border-border dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
             />
             <select
@@ -404,7 +404,7 @@ export default function ProductsAdminPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="font-semibold text-text-primary dark:text-white">UGX {(p.price * 3700).toLocaleString('en-UG', { maximumFractionDigits: 0 })}</span>
+                    <span className="font-semibold text-text-primary dark:text-white">UGX {p.price.toLocaleString('en-UG', { maximumFractionDigits: 0 })}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1">

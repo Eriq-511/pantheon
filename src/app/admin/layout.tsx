@@ -1,11 +1,13 @@
 'use client';
 
+
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import Sidebar from '@/components/admin/Sidebar';
 import Navbar from '@/components/admin/Navbar';
+import PantheonLoadingScreen from '@/components/admin/PantheonLoadingScreen';
 import { fetchMeThunk, rehydrateUser } from '@/store/slices/authSlice';
 import type { AppDispatch, RootState } from '@/store/store';
 
@@ -13,7 +15,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const pathname = usePathname();
-  const { user, loading } = useSelector((state: RootState) => state.auth);
+  const { user, status } = useSelector((state: RootState) => state.auth);
 
   const isAuthPage = pathname === '/admin/login' || pathname === '/admin/signup';
 
@@ -56,14 +58,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // Auth guard — show spinner while session is being verified
-  if (loading || !user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-admin-bg">
-        <span className="w-8 h-8 rounded-full border-4 border-teal/20 border-t-teal animate-spin" />
-      </div>
-    );
+
+  // Auth guard — show neutral loading screen while verifying
+  if (status === 'loading') {
+    return <PantheonLoadingScreen />;
   }
+  if (status === 'unauthenticated') {
+    router.push('/admin/login');
+    return null;
+  }
+  // status === 'authenticated' — render the protected content
 
   return (
     <div className="flex min-h-screen bg-admin-bg">

@@ -67,7 +67,7 @@ export default function ProductsShowcase({ products }: ProductsShowcaseProps) {
                 {/* Footer: price + rating */}
                 <div className="flex items-center justify-between mt-auto">
                   <span className="text-lg font-extrabold text-text-primary dark:text-white">
-                    UGX {(product.price * 3700).toLocaleString('en-UG', { maximumFractionDigits: 0 })}
+                    UGX {product.price.toLocaleString('en-UG', { maximumFractionDigits: 0 })}
                   </span>
                   <div className="flex items-center gap-1 text-yellow-500">
                     <Star size={13} fill="currentColor" />

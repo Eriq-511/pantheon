@@ -1,5 +1,5 @@
 import type { MenuItem } from '@/types';
-import AmaraHeader from '@/components/mall/AmaraHeader';
+import AmaraHeader from '@/components/mall/AmaraHeader2';
 import AmaraFooter from '@/components/mall/AmaraFooter';
 
 async function getMenuItems(): Promise<MenuItem[]> {

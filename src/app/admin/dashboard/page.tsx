@@ -17,6 +17,9 @@ import { fetchMenu } from '@/store/slices/menuSlice';
 import { productsService } from '@/services/productsService';
 import { settingsService } from '@/services/settingsService';
 import PantheonOnboarding from '@/components/admin/PantheonOnboarding';
+import SettingsModal from '@/components/admin/SettingsModal';
+// Demo: local state for connected entities
+const DEMO_ENTITIES: any[] = [];
 import type { AppDispatch, RootState } from '@/store/store';
 import type { LinkAnalysisProfile, Product, SiteSettings } from '@/types';
 
@@ -440,6 +443,18 @@ function getConnectionProcedure(
 }
 
 export default function DashboardPage() {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [entities, setEntities] = useState(DEMO_ENTITIES);
+
+  const handleConnect = (type: string, data: any) => {
+    setEntities((prev) => [
+      ...prev,
+      { id: Date.now().toString(), type, name: data.url, url: data.url, status: 'connected' },
+    ]);
+  };
+  const handleDisconnect = (id: string) => {
+    setEntities((prev) => prev.filter((e) => e.id !== id));
+  };
   const dispatch = useDispatch<AppDispatch>();
   const { pages, loading: pagesLoading } = useSelector((s: RootState) => s.pages);
   const { images, loading: imagesLoading } = useSelector((s: RootState) => s.images);
@@ -541,6 +556,40 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Dashboard header with settings icon */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h2>
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="p-2 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-teal-600 hover:text-white transition-colors"
+          title="Settings"
+        >
+          <Settings size={20} />
+        </button>
+      </div>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        entities={entities}
+        onConnect={handleConnect}
+        onDisconnect={handleDisconnect}
+      />
+
+      {/* If no entities, show connect prompt */}
+      {entities.length === 0 && (
+        <div className="p-8 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-center text-yellow-800 dark:text-yellow-200 mb-8">
+          <p className="text-lg font-semibold mb-2">No site or social account connected</p>
+          <p className="mb-4">Connect a website or social account to enable live controls, analytics, and publishing features.</p>
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="px-4 py-2 bg-teal-600 text-white rounded"
+          >
+            Connect Now
+          </button>
+        </div>
+      )}
       <PantheonOnboarding
         open={showOnboarding}
         onClose={handleCloseOnboarding}

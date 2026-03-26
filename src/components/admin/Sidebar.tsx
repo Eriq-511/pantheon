@@ -42,7 +42,7 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map(({ href, label, icon: Icon }) => {
-          const isActive = pathname === href || pathname.startsWith(href + '/');
+          const isActive = pathname === href || (pathname && pathname.startsWith(href + '/'));
           return (
             <Link
               key={href}

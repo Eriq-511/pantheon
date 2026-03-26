@@ -39,21 +39,9 @@ export default function AmaraFooter() {
 
           {/* Shop Links */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-[#E8A598] mb-4">
-              Shop
-            </h3>
-            <ul className="space-y-2">
-              {['All Products', 'Moisturizers', 'Serums', 'Cleansers', 'Sunscreen'].map((item) => (
-                <li key={item}>
-                  <Link
-                    href="/mall"
-                    className="text-sm text-[#C8A898] hover:text-[#F7E8DF] transition-colors"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <p className="text-sm text-[#C8A898] leading-relaxed max-w-xl mx-auto">
+              No site connected. <span className="font-semibold">Connect your website or social account in Settings to enable live controls and analytics.</span>
+            </p>
           </div>
 
           {/* Info Links */}
